@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify, session, send_file
-from flask_login import current_user, login_required
 from app.services.assessment_service import process_assessment
 from app.models.result import Result
 from app.core.questions import QUESTIONS
@@ -16,10 +15,9 @@ def get_pdf_class():
         return None
 
 @assessment_bp.route('/api/download-report', methods=['GET'])
-@login_required
 def download_report():
-    # Get the latest result for the user
-    result = Result.query.filter_by(user_id=current_user.id).order_by(Result.id.desc()).first()
+    # Get the latest result
+    result = Result.query.order_by(Result.id.desc()).first()
     
     if not result:
         return jsonify({"error": "No assessment result found. Please complete an assessment first."}), 404
@@ -37,13 +35,6 @@ def download_report():
     pdf.set_text_color(45, 75, 143) # #2d4b8f
     pdf.cell(0, 20, "JobReady Career Report", border=0, ln=1, align='C')
     pdf.ln(10)
-    
-    # User Info
-    pdf.set_font("Helvetica", 'B', 16)
-    pdf.set_text_color(51, 51, 51)
-    pdf.cell(0, 10, f"Name: {current_user.name}", border=0, ln=1)
-    pdf.cell(0, 10, f"Email: {current_user.email}", border=0, ln=1)
-    pdf.ln(5)
     
     # Career Recommendation
     pdf.set_draw_color(221, 221, 221)
@@ -152,11 +143,10 @@ def download_report():
         output,
         mimetype='application/pdf',
         as_attachment=True,
-        download_name=f"JobReady_Report_{current_user.name.replace(' ', '_')}.pdf"
+        download_name="JobReady_Career_Report.pdf"
     )
 
 @assessment_bp.route('/api/current-question', methods=['GET'])
-@login_required
 def get_current_question():
     current_index = session.get('current_question_index', 0)
     
@@ -170,7 +160,6 @@ def get_current_question():
     })
 
 @assessment_bp.route('/api/next-question', methods=['POST'])
-@login_required
 def next_question():
     data = request.json
     answer = data.get('answer')
@@ -199,7 +188,7 @@ def next_question():
     # Proactively process assessment if finished to avoid race conditions
     if finished:
         answers_dict = {str(i): ans for i, ans in enumerate(answers)}
-        process_assessment(current_user.id, answers_dict)
+        process_assessment(1, answers_dict) # Using anonymous user ID 1
         # Clear session after submission
         session.pop('current_question_index', None)
         session.pop('answers', None)
@@ -210,7 +199,6 @@ def next_question():
     })
 
 @assessment_bp.route('/api/previous-question', methods=['POST'])
-@login_required
 def previous_question():
     current_index = session.get('current_question_index', 0)
     
@@ -221,15 +209,13 @@ def previous_question():
     return jsonify({"error": "Already at the first question"}), 400
 
 @assessment_bp.route('/api/submit', methods=['POST'])
-@login_required
 def submit():
     # This is now a backup or manual trigger, primary submission happens in next_question
     answers = session.get('answers', [])
     
     if not answers:
         # Check if we already have a result from the pro-active submission
-        from app.models.result import Result
-        result = Result.query.filter_by(user_id=current_user.id).order_by(Result.id.desc()).first()
+        result = Result.query.order_by(Result.id.desc()).first()
         if result:
             return jsonify({
                 "career": result.career,
@@ -242,7 +228,7 @@ def submit():
     # Convert session list to dict for processing
     answers_dict = {str(i): ans for i, ans in enumerate(answers)}
     
-    result = process_assessment(current_user.id, answers_dict)
+    result = process_assessment(1, answers_dict) # Using anonymous user ID 1
     
     # Clear session after submission
     session.pop('current_question_index', None)
@@ -256,13 +242,12 @@ def submit():
     })
 
 @assessment_bp.route('/api/result', methods=['GET'])
-@login_required
 def get_result():
-    # Get the latest result for the current user
-    result = Result.query.filter_by(user_id=current_user.id).order_by(Result.id.desc()).first()
+    # Get the latest result
+    result = Result.query.order_by(Result.id.desc()).first()
     
     if not result:
-        return jsonify({"error": "No result found"}), 404
+        return jsonify({"error": "No assessment result found"}), 404
         
     return jsonify({
         "career": result.career,

@@ -2,14 +2,7 @@
 
 <h2>Admin Dashboard</h2>
 
-<h3>Users</h3>
-<ul>
-{% for user in users %}
-<li>{{ user.name }} - {{ user.email }}</li>
-{% endfor %}
-</ul>
-
-<h3>Results</h3>
+<h3>Recent Results</h3>
 <ul>
 {% for r in results %}
 <li>{{ r.career }} - {{ r.score }}%</li>
