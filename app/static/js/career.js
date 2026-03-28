@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         `;
 
-        // Simple classification logic
-        if (["Python", "SQL", "Data Vis"].includes(skill)) {
+        // Classification logic based on new category structure
+        if (skill === "Technical Skills" || skill === "Technical") {
           techHTML += block;
-        } else {
+        } else if (skill === "Soft Skills") {
           softHTML += block;
         }
       }

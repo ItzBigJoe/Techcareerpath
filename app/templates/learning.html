@@ -32,53 +32,93 @@
 
 <h2>Learning Recommendations</h2>
 
-<p>Here are suggested resources to help you improve your skills.</p>
+<p id="recommendation-intro">Here are suggested resources to help you improve your skills.</p>
 
-<div class="courses">
-
-<div class="course-card">
-
-<img src="{{ url_for('static', filename='assets/book.png') }}">
-
-<h3>Python for Data Analysis</h3>
-
-<p>Learn data manipulation and analysis using python</p>
-
-<button class="next">Start Learning</button>
-
-</div>
-
-
-<div class="course-card">
-
-<img src="{{ url_for('static', filename='assets/book.png') }}">
-
-<h3>SQL Fundamental</h3>
-
-<p>Understand how to query and manage databases</p>
-
-<button class="next">Start Learning</button>
-
-</div>
-
-
-<div class="course-card">
-
-<img src="{{ url_for('static', filename='assets/book.png') }}">
-
-<h3>Data Visualization with Power BI</h3>
-
-<p>Create dashboards and visual insights</p>
-
-<button class="next">Start Learning</button>
-
-</div>
-
+<div class="career-grid" id="courses-container">
+    <!-- Courses will be loaded here dynamically -->
+    <p>Loading your personalized recommendations...</p>
 </div>
 
 <button class="back" type="button" onclick="location.href='/career'">← Back to Dashboard</button>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const coursesContainer = document.getElementById("courses-container");
+    const introText = document.getElementById("recommendation-intro");
+
+    const courseMapping = {
+        "Frontend": {
+            title: "Advanced Frontend Engineering",
+            desc: "Master modern frameworks and complex UI patterns."
+        },
+        "Backend": {
+            title: "Scalable Backend Systems",
+            desc: "Learn to design and optimize high-performance server architectures."
+        },
+        "AI/Data Science": {
+            title: "Applied Machine Learning",
+            desc: "Build and deploy predictive models using real-world datasets."
+        },
+        "DSA": {
+            title: "Algorithm Mastery & Optimization",
+            desc: "Deep dive into advanced data structures and competitive programming."
+        }
+    };
+
+    fetch('/api/result')
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                coursesContainer.innerHTML = "<p>Please complete an assessment first to see recommendations.</p>";
+                return;
+            }
+
+            let coursesHTML = "";
+            let foundMatch = false;
+
+            for (let category in data.skills) {
+                // Skip non-technical categories and readiness score
+                if (category === "Soft Skills" || category === "Readiness" || category === "Technical") continue;
+
+                let score = data.skills[category];
+                
+                // Only recommend if score > 50% as requested
+                if (score > 50 && courseMapping[category]) {
+                    foundMatch = true;
+                    let course = courseMapping[category];
+                    
+                    coursesHTML += `
+                        <div class="course-card">
+                            <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Book Icon">
+                            <h3>${course.title}</h3>
+                            <p>${course.desc}</p>
+                            <div style="margin-bottom: 15px; color: #4a90e2; font-weight: bold;">Your Proficiency: ${score}%</div>
+                            <button class="next">Start Learning</button>
+                        </div>
+                    `;
+                }
+            }
+
+            if (!foundMatch) {
+                introText.textContent = "Keep working on your skills! Focus on the areas below 50% to unlock advanced recommendations.";
+                coursesContainer.innerHTML = `
+                    <div style="text-align: center; grid-column: 1 / -1; padding: 40px; background: #f9f9f9; border-radius: 10px;">
+                        <p>No advanced courses available yet based on your current technical scores (>50%).</p>
+                        <a href="/assessment" style="color: #4a90e2; text-decoration: underline;">Retake assessment</a> to update your scores.
+                    </div>
+                `;
+            } else {
+                coursesContainer.innerHTML = coursesHTML;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            coursesContainer.innerHTML = "<p>Error loading recommendations. Please try again later.</p>";
+        });
+});
+</script>
 
 <!-- FOOTER -->
 

@@ -29,53 +29,7 @@
 
 <h2>Career Skill Assessment</h2>
 
-<p>Select a tech career and answer the questions to evaluate your readiness</p>
-
-<!-- CAREER OPTIONS -->
-
-<div class="career-grid">
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/frontend.png') }}"> <!-- placeholder -->
-<p>Frontend Development</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/backend.png') }}">
-<p>Backend Development</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/data.png') }}">
-<p>Data Analytics</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/datascience.png') }}">
-<p>Data Science</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/aieng.png') }}">
-<p>AI Engineering</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/cloud.png') }}">
-<p>Cloud Engineering</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/cyber.png') }}">
-<p>CyberSecurity</p>
-</div>
-
-<div class="career-card">
-<img src="{{ url_for('static', filename='assets/icons/product.png') }}">
-<p>Product Management</p>
-</div>
-
-</div>
+<p>Answer the questions to evaluate your readiness</p>
 
 <!-- PROGRESS -->
 
@@ -93,9 +47,14 @@
 
 <div class="question-area">
 
+<h3 id="question-category" style="color: #666; font-size: 0.9rem; margin-bottom: 5px;">Category</h3>
 <h3 id="question-text">Loading question...</h3>
 
-<textarea id="user-response" placeholder="Type your answer here..." style="width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;"></textarea>
+<div id="options-container" style="margin-top: 20px;">
+    <!-- Options will be loaded here dynamically -->
+</div>
+
+<textarea id="user-response" placeholder="Type your answer here..." style="display: none; width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;"></textarea>
 
 </div>
 
@@ -125,7 +84,7 @@ Next Question
 
 <script>
 let currentQuestionIndex = 0;
-let totalQuestions = 10;
+let totalQuestions = 25;
 let answers = {};
 
 // Load the first question when the page loads
@@ -134,9 +93,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add event listener to next button
     document.getElementById('next-btn').addEventListener('click', function() {
-        const answer = document.getElementById('user-response').value.trim();
+        let answer = '';
+        const options = document.getElementsByName('option');
+        if (options.length > 0) {
+            // MCQ question
+            for (const option of options) {
+                if (option.checked) {
+                    answer = option.value;
+                    break;
+                }
+            }
+        } else {
+            // Fallback for text input if used
+            answer = document.getElementById('user-response').value.trim();
+        }
+
         if (answer === '') {
-            alert('Please answer the question before proceeding.');
+            alert('Please select an answer before proceeding.');
             return;
         }
         answers[currentQuestionIndex] = answer;
@@ -168,15 +141,66 @@ function loadCurrentQuestion() {
             }
             currentQuestionIndex = data.current - 1;
             totalQuestions = data.total;
+            
+            document.getElementById('question-category').textContent = data.question.category || 'General';
             document.getElementById('question-text').textContent = data.question.text;
             document.getElementById('progress-text').textContent = `Questions ${data.current} of ${data.total}`;
+            
+            // Handle Options (MCQ)
+            const optionsContainer = document.getElementById('options-container');
+            const textArea = document.getElementById('user-response');
+            optionsContainer.innerHTML = '';
+            
+            if (data.question.options && data.question.options.length > 0) {
+                textArea.style.display = 'none';
+                optionsContainer.style.display = 'block';
+                
+                data.question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option-item';
+                    optionDiv.style.margin = '10px 0';
+                    optionDiv.style.padding = '10px';
+                    optionDiv.style.border = '1px solid #eee';
+                    optionDiv.style.borderRadius = '5px';
+                    optionDiv.style.cursor = 'pointer';
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'option';
+                    radio.id = 'opt-' + index;
+                    radio.value = option;
+                    radio.style.marginRight = '10px';
+                    
+                    // Restore saved answer
+                    if (answers[currentQuestionIndex] === option) {
+                        radio.checked = true;
+                    }
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = 'opt-' + index;
+                    label.textContent = option;
+                    label.style.cursor = 'pointer';
+                    label.style.width = '100%';
+                    label.style.display = 'inline-block';
+                    
+                    optionDiv.appendChild(radio);
+                    optionDiv.appendChild(label);
+                    
+                    // Click on div selects radio
+                    optionDiv.onclick = () => radio.checked = true;
+                    
+                    optionsContainer.appendChild(optionDiv);
+                });
+            } else {
+                // Fallback to text area if no options
+                optionsContainer.style.display = 'none';
+                textArea.style.display = 'block';
+                textArea.value = answers[currentQuestionIndex] || '';
+            }
             
             // Update progress bar
             const progressPercent = (data.current / data.total) * 100;
             document.getElementById('progress-bar-fill').style.width = progressPercent + '%';
-            
-            // Load saved answer if it exists
-            document.getElementById('user-response').value = answers[currentQuestionIndex] || '';
             
             // Update button states
             document.getElementById('back-btn').disabled = currentQuestionIndex === 0;
@@ -188,7 +212,18 @@ function loadCurrentQuestion() {
 }
 
 function goToNextQuestion() {
-    const answer = document.getElementById('user-response').value.trim();
+    let answer = '';
+    const options = document.getElementsByName('option');
+    if (options.length > 0) {
+        for (const option of options) {
+            if (option.checked) {
+                answer = option.value;
+                break;
+            }
+        }
+    } else {
+        answer = document.getElementById('user-response').value.trim();
+    }
     
     fetch("{{ url_for('assessment.next_question') }}", {
         method: 'POST',
