@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    # Use environment variable, no hardcoded default for sensitive data
-    SECRET_KEY = os.getenv("SECRET_KEY")
+    # Use environment variable, with a fallback for local development stability
+    SECRET_KEY = os.getenv("SECRET_KEY", "jobready-dev-secret-key-2026")
     
     # Use PostgreSQL in production (Render provides DATABASE_URL)
     # Default to local SQLite for development

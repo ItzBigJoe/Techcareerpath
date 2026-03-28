@@ -150,11 +150,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadCurrentQuestion() {
-    fetch('/api/current-question')
-        .then(response => response.json())
+    fetch("{{ url_for('assessment.get_current_question') }}")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.error) {
-                alert('Error loading question');
+                alert('Error loading question: ' + data.error);
+                return;
+            }
+            if (data.finished) {
+                window.location.href = "{{ url_for('pages.analyzing') }}";
                 return;
             }
             currentQuestionIndex = data.current - 1;
@@ -174,14 +183,14 @@ function loadCurrentQuestion() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error loading question');
+            alert('Error loading question. Please make sure you are logged in.');
         });
 }
 
 function goToNextQuestion() {
     const answer = document.getElementById('user-response').value.trim();
     
-    fetch('/api/next-question', {
+    fetch("{{ url_for('assessment.next_question') }}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -212,10 +221,10 @@ function goToNextQuestion() {
 
 function submitAssessment() {
     // Show loading or redirect to analyzing page immediately
-    window.location.href = '/analyzing';
+    window.location.href = "{{ url_for('pages.analyzing') }}";
     
     // In the background or on the analyzing page, the submission happens
-    fetch('/api/submit', {
+    fetch("{{ url_for('assessment.submit') }}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -236,7 +245,7 @@ function goToPreviousQuestion() {
         answers[currentQuestionIndex] = answer;
     }
     
-    fetch('/api/previous-question', {
+    fetch("{{ url_for('assessment.previous_question') }}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
