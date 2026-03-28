@@ -188,7 +188,7 @@ def next_question():
     # Proactively process assessment if finished to avoid race conditions
     if finished:
         answers_dict = {str(i): ans for i, ans in enumerate(answers)}
-        process_assessment(1, answers_dict) # Using anonymous user ID 1
+        process_assessment("anonymous", answers_dict) # Using "anonymous" as session_id
         # Clear session after submission
         session.pop('current_question_index', None)
         session.pop('answers', None)

@@ -4,7 +4,7 @@ from app.core.extensions import db
 from app.core.questions import QUESTIONS
 from app.services.career_algorithm import match_career_v2
 
-def process_assessment(user_id, answers_dict):
+def process_assessment(session_id, answers_dict):
     # Track scores per category
     category_scores = {
         "Soft Skills": {"correct": 0, "total": 5},
@@ -74,7 +74,7 @@ def process_assessment(user_id, answers_dict):
     top_career, rank_score, metrics = rankings[0]
 
     result = Result()
-    result.user_id = user_id
+    result.session_id = session_id
     result.career = top_career
     result.score = readiness_score
     
