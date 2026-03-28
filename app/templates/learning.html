@@ -78,35 +78,32 @@ document.addEventListener("DOMContentLoaded", function () {
             let coursesHTML = "";
             let foundMatch = false;
 
-            for (let category in data.skills) {
-                // Skip non-technical categories and readiness score
-                if (category === "Soft Skills" || category === "Readiness" || category === "Technical") continue;
-
-                let score = data.skills[category];
-                
-                // Only recommend if score > 50% as requested
-                if (score > 50 && courseMapping[category]) {
+            // Task 10: DYNAMIC RESOURCE RENDERING
+            if (data.gaps && data.gaps.resources) {
+                for (let skill in data.gaps.resources) {
                     foundMatch = true;
-                    let course = courseMapping[category];
+                    let resources = data.gaps.resources[skill];
                     
                     coursesHTML += `
                         <div class="course-card">
                             <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Book Icon">
-                            <h3>${course.title}</h3>
-                            <p>${course.desc}</p>
-                            <div style="margin-bottom: 15px; color: #4a90e2; font-weight: bold;">Your Proficiency: ${score}%</div>
-                            <button class="next">Start Learning</button>
+                            <h3>Learn ${skill}</h3>
+                            <p>Recommended resources to bridge your skill gap:</p>
+                            <ul style="text-align: left; margin: 15px 0; font-size: 0.9rem; list-style: none; padding: 0;">
+                                ${resources.map(r => `<li style="margin-bottom: 8px;">🔗 ${r}</li>`).join('')}
+                            </ul>
+                            <button class="next">Explore Now</button>
                         </div>
                     `;
                 }
             }
 
             if (!foundMatch) {
-                introText.textContent = "Keep working on your skills! Focus on the areas below 50% to unlock advanced recommendations.";
+                introText.textContent = "Congratulations! You have no major skill gaps for your recommended career.";
                 coursesContainer.innerHTML = `
                     <div style="text-align: center; grid-column: 1 / -1; padding: 40px; background: #f9f9f9; border-radius: 10px;">
-                        <p>No advanced courses available yet based on your current technical scores (>50%).</p>
-                        <a href="/assessment" style="color: #4a90e2; text-decoration: underline;">Retake assessment</a> to update your scores.
+                        <p>You are fully JobReady for your path! Check back later for advanced specialization courses.</p>
+                        <a href="/assessment" style="color: #4a90e2; text-decoration: underline;">Explore another path</a>
                     </div>
                 `;
             } else {

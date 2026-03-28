@@ -1,4 +1,3 @@
-from openai import OpenAI
 import os
 import json
 
@@ -7,6 +6,11 @@ MODEL_ID = "gpt-4o-mini"  # Using a fast and cost-effective model
 
 def get_ai_client():
     """Lazily initialize the OpenAI client to avoid errors when API key is missing during import."""
+    try:
+        from openai import OpenAI
+    except ImportError:
+        return None
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return None

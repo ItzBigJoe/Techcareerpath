@@ -4,9 +4,16 @@ from app.services.assessment_service import process_assessment
 from app.models.result import Result
 from app.core.questions import QUESTIONS
 import io
-from fpdf import FPDF
 
 assessment_bp = Blueprint('assessment', __name__)
+
+def get_pdf_class():
+    """Lazily import FPDF to avoid startup errors if the library is missing."""
+    try:
+        from fpdf import FPDF # type: ignore
+        return FPDF
+    except ImportError:
+        return None
 
 @assessment_bp.route('/api/download-report', methods=['GET'])
 @login_required
@@ -18,7 +25,11 @@ def download_report():
         return jsonify({"error": "No assessment result found. Please complete an assessment first."}), 404
         
     # Generate PDF
-    pdf = FPDF()
+    FPDF_Class = get_pdf_class()
+    if not FPDF_Class:
+        return jsonify({"error": "PDF generation library (fpdf2) is not installed on the server."}), 500
+        
+    pdf = FPDF_Class()
     pdf.add_page()
     
     # Title
@@ -50,6 +61,14 @@ def download_report():
     pdf.set_font("Helvetica", 'B', 16)
     pdf.set_text_color(51, 51, 51)
     pdf.cell(0, 10, f"Overall Readiness Score: {result.score}%", border=0, ln=1)
+    
+    # Advanced Metrics (Task 7 & 11)
+    domain_fit = result.skills.get("Domain Fit", 0)
+    tag_similarity = result.skills.get("Tag Similarity", 0)
+    
+    pdf.set_font("Helvetica", '', 12)
+    pdf.cell(100, 10, f"Domain Fit: {domain_fit}%", border=0, ln=0)
+    pdf.cell(0, 10, f"Tag Similarity: {tag_similarity}%", border=0, ln=1)
     pdf.ln(10)
     
     # Skill Breakdown
@@ -58,21 +77,65 @@ def download_report():
     pdf.ln(5)
     
     pdf.set_font("Helvetica", '', 14)
+    # Filter out metrics from breakdown
+    metric_keys = ["Readiness", "Domain Fit", "Tag Similarity", "Technical", "Soft Skills"]
     for skill, value in result.skills.items():
-        if skill == "Readiness": continue
+        if skill in metric_keys: continue
         pdf.cell(100, 10, f"{skill}:", border=0, ln=0)
         pdf.cell(0, 10, f"{value}%", border=0, ln=1)
         
     pdf.ln(10)
     
-    # Skill Gaps
-    if result.gaps:
-        pdf.set_font("Helvetica", 'B', 18)
-        pdf.cell(0, 10, "Skill Gaps & Areas for Improvement", border=0, ln=1)
-        pdf.ln(5)
-        pdf.set_font("Helvetica", '', 12)
-        for gap in result.gaps:
-            pdf.multi_cell(0, 10, f"• {gap}", border=0, align='L')
+    # Advanced Skill Gaps (Task 8 & 10)
+    if isinstance(result.gaps, dict):
+        missing = result.gaps.get("missing", [])
+        weak = result.gaps.get("weak", [])
+        resources = result.gaps.get("resources", {})
+        
+        if missing or weak:
+            pdf.set_font("Helvetica", 'B', 18)
+            pdf.cell(0, 10, "Skill Gaps & Actionable Learning Path", border=0, ln=1)
+            pdf.ln(5)
+            
+            if missing:
+                pdf.set_font("Helvetica", 'B', 14)
+                pdf.set_text_color(198, 40, 40) # Red
+                pdf.cell(0, 10, "Critical Missing Skills:", border=0, ln=1)
+                pdf.set_font("Helvetica", '', 11)
+                pdf.set_text_color(51, 51, 51)
+                for skill in missing:
+                    pdf.multi_cell(0, 8, f"- {skill}", border=0, align='L')
+                    if skill in resources:
+                        pdf.set_font("Helvetica", 'I', 10)
+                        pdf.set_text_color(100, 100, 100)
+                        pdf.multi_cell(0, 6, f"  Resources: {', '.join(resources[skill])}", border=0, align='L')
+                        pdf.set_font("Helvetica", '', 11)
+                        pdf.set_text_color(51, 51, 51)
+                pdf.ln(5)
+                
+            if weak:
+                pdf.set_font("Helvetica", 'B', 14)
+                pdf.set_text_color(249, 168, 37) # Yellow
+                pdf.cell(0, 10, "Skills to Improve:", border=0, ln=1)
+                pdf.set_font("Helvetica", '', 11)
+                pdf.set_text_color(51, 51, 51)
+                for skill in weak:
+                    pdf.multi_cell(0, 8, f"- {skill}", border=0, align='L')
+                    if skill in resources:
+                        pdf.set_font("Helvetica", 'I', 10)
+                        pdf.set_text_color(100, 100, 100)
+                        pdf.multi_cell(0, 6, f"  Resources: {', '.join(resources[skill])}", border=0, align='L')
+                        pdf.set_font("Helvetica", '', 11)
+                        pdf.set_text_color(51, 51, 51)
+    else:
+        # Legacy gaps fallback
+        if result.gaps:
+            pdf.set_font("Helvetica", 'B', 18)
+            pdf.cell(0, 10, "Skill Gaps & Areas for Improvement", border=0, ln=1)
+            pdf.ln(5)
+            pdf.set_font("Helvetica", '', 12)
+            for gap in result.gaps:
+                pdf.multi_cell(0, 10, f"- {gap}", border=0, align='L')
             
     pdf.ln(20)
     pdf.set_font("Helvetica", 'I', 10)
