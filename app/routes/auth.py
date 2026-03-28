@@ -31,8 +31,12 @@ def register():
         
         db.session.add(user)
         db.session.commit()
-        flash('Registration successful! Please log in.', 'success')
-        return redirect(url_for('auth.login'))
+        
+        # Log the user in immediately after successful registration
+        login_user(user)
+        
+        flash('Registration successful! Welcome to JobReady.', 'success')
+        return redirect(url_for('pages.profile'))
         
     return render_template('register.html')
 

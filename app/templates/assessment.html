@@ -163,13 +163,16 @@ function loadCurrentQuestion() {
                     optionDiv.style.border = '1px solid #eee';
                     optionDiv.style.borderRadius = '5px';
                     optionDiv.style.cursor = 'pointer';
+                    optionDiv.style.display = 'flex';
+                    optionDiv.style.alignItems = 'center';
                     
                     const radio = document.createElement('input');
                     radio.type = 'radio';
                     radio.name = 'option';
                     radio.id = 'opt-' + index;
                     radio.value = option;
-                    radio.style.marginRight = '10px';
+                    radio.style.marginRight = '12px';
+                    radio.style.cursor = 'pointer';
                     
                     // Restore saved answer
                     if (answers[currentQuestionIndex] === option) {
@@ -180,14 +183,17 @@ function loadCurrentQuestion() {
                     label.htmlFor = 'opt-' + index;
                     label.textContent = option;
                     label.style.cursor = 'pointer';
-                    label.style.width = '100%';
-                    label.style.display = 'inline-block';
+                    label.style.flex = '1';
+                    label.style.display = 'block';
+                    label.style.margin = '0';
                     
                     optionDiv.appendChild(radio);
                     optionDiv.appendChild(label);
                     
                     // Click on div selects radio
-                    optionDiv.onclick = () => radio.checked = true;
+                    optionDiv.onclick = () => {
+                        radio.checked = true;
+                    };
                     
                     optionsContainer.appendChild(optionDiv);
                 });
