@@ -108,6 +108,51 @@ img {
   text-align: center;
   padding: 0 15px;
 }
+
+.assessment-section {
+  text-align: left;
+}
+
+.assessment-section h2, 
+.assessment-section p {
+  text-align: center;
+}
+
+.question-area {
+  text-align: left;
+  margin-bottom: calc(25px * var(--scale));
+}
+
+.question-area h3 {
+  text-align: left;
+  margin: calc(10px * var(--scale)) 0;
+}
+
+.tip-box {
+  background: #fff;
+  padding: calc(15px * var(--scale));
+  border-radius: calc(8px * var(--scale));
+  border: 1px solid #eee;
+  text-align: left;
+  margin: calc(25px * var(--scale)) 0;
+}
+
+.tip-box h4 {
+  color: #555;
+  margin-bottom: calc(5px * var(--scale));
+}
+
+.tip-box p {
+  font-size: calc(14px * var(--scale));
+  color: #777;
+  text-align: left;
+}
+
+.progress-area {
+  text-align: left;
+  margin-bottom: calc(20px * var(--scale));
+}
+
 .progress-bar{
   width: 100%;
   height: calc(10px * var(--scale));

@@ -1,13 +1,15 @@
 # 🚀 JobReady - AI Career Assessment Platform
 
-JobReady is a powerful web application designed to help tech enthusiasts discover their ideal career path. By leveraging Google's Gemini AI, the platform evaluates your current skills and provides personalized recommendations, readiness scores, and learning paths.
+JobReady is a powerful web application designed to help tech enthusiasts discover their ideal career path. By leveraging OpenAI's GPT-4o-mini, the platform evaluates your current skills and provides personalized recommendations, readiness scores, and learning paths.
 
 ## ✨ Features
 
-- **AI-Powered Assessment**: Get a deep analysis of your technical and soft skills using Gemini-1.5-Flash.
-- **Personalized Career Matching**: Discover which tech role (Frontend, Backend, AI Engineering, etc.) fits you best.
+- **AI-Powered Assessment**: Get a deep analysis of your technical and soft skills using OpenAI's GPT-4o-mini.
+- **Personalized Career Matching**: Discover which tech role (Frontend, Backend, AI/Data Science, DSA) fits you best.
+- **Professional PDF Reports**: Download a comprehensive career assessment report as a PDF.
 - **Readiness Score**: A clear visual representation of how prepared you are for your target career.
 - **Skill Gap Identification**: Know exactly what you need to learn next with automated gap analysis.
+- **Mobile Responsive UI**: Fully optimized for a seamless experience on desktop, tablet, and mobile devices.
 - **Progress Tracking**: Save your assessment progress and view your results anytime.
 - **Secure Authentication**: User registration and login powered by Flask-Login.
 
@@ -15,8 +17,9 @@ JobReady is a powerful web application designed to help tech enthusiasts discove
 
 - **Backend**: Python, Flask
 - **Database**: SQLite (Development) / PostgreSQL (Production)
-- **AI Engine**: Google Generative AI (Gemini API)
-- **Frontend**: HTML5, CSS3, JavaScript
+- **AI Engine**: OpenAI API (GPT-4o-mini)
+- **PDF Generation**: fpdf2
+- **Frontend**: HTML5, CSS3 (Flexbox/Grid), JavaScript
 - **Deployment**: Render / GitHub
 
 ## 🚦 Getting Started
@@ -24,7 +27,7 @@ JobReady is a powerful web application designed to help tech enthusiasts discove
 ### Prerequisites
 
 - Python 3.8+
-- A Google Gemini API Key ([Get it here](https://aistudio.google.com/app/apikey))
+- An OpenAI API Key ([Get it here](https://platform.openai.com/api-keys))
 
 ### Local Setup
 
@@ -49,7 +52,7 @@ JobReady is a powerful web application designed to help tech enthusiasts discove
    Create a `.env` file in the root directory:
    ```env
    SECRET_KEY=your_secret_key_here
-   GEMINI_API_KEY=your_gemini_api_key_here
+   OPENAI_API_KEY=your_openai_api_key_here
    ```
 
 5. **Run the application**:
@@ -66,10 +69,10 @@ JobReady is a powerful web application designed to help tech enthusiasts discove
 4. **Environment Settings**:
    - **Runtime**: `Python 3`
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn wsgi:app` (or `gunicorn app:app`)
+   - **Start Command**: `gunicorn wsgi:app`
 5. **Add Environment Variables** in Render Dashboard:
    - `SECRET_KEY`: A random secure string.
-   - `GEMINI_API_KEY`: Your Google Gemini API Key.
+   - `OPENAI_API_KEY`: Your OpenAI API Key.
    - `PYTHON_VERSION`: `3.10.0` (or your preferred version).
 
 ## 📂 Project Structure
