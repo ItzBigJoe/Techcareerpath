@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Assessment - JobReady</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="nav-left">
+<img src="{{ url_for('static', filename='assets/logo.jpg') }}" alt="JobReady Logo" class="logo"> <!-- LOGO PLACEHOLDER -->
+<h1 class="brand">Job<span>Ready</span></h1>
+</div>
+<nav class="nav-links">
+<a href="/">Home</a>
+<a href="/profile">Profile</a>
+</nav>
+
+</header>
+
+<section class="assessment-section">
+
+<h2>Career Skill Assessment</h2>
+
+<p>Select a tech career and answer the questions to evaluate your readiness</p>
+
+<!-- CAREER OPTIONS -->
+
+<div class="career-grid">
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/frontend.png') }}"> <!-- placeholder -->
+<p>Frontend Development</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/backend.png') }}">
+<p>Backend Development</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/data.png') }}">
+<p>Data Analytics</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/datascience.png') }}">
+<p>Data Science</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/aieng.png') }}">
+<p>AI Engineering</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/cloud.png') }}">
+<p>Cloud Engineering</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/cyber.png') }}">
+<p>CyberSecurity</p>
+</div>
+
+<div class="career-card">
+<img src="{{ url_for('static', filename='assets/icons/product.png') }}">
+<p>Product Management</p>
+</div>
+
+</div>
+
+<!-- PROGRESS -->
+
+<div class="progress-area">
+
+<p id="progress-text">Questions 1 of 10</p>
+
+<div class="progress-bar">
+<div class="progress" id="progress-bar-fill" style="width: 0%"></div>
+</div>
+
+</div>
+
+<!-- QUESTION -->
+
+<div class="question-area">
+
+<h3 id="question-text">Loading question...</h3>
+
+<textarea id="user-response" placeholder="Type your answer here..." style="width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;"></textarea>
+
+</div>
+
+<!-- TIP BOX -->
+
+<div class="tip-box">
+
+<h4>Tip</h4>
+
+<p>Answer honestly to get accurate career recommendation</p>
+
+</div>
+
+<!-- NAVIGATION BUTTONS -->
+
+<div class="question-nav">
+
+<button class="secondary-btn" id="back-btn">
+Back
+</button>
+
+<button class="primary-btn" id="next-btn">
+Next Question
+</button>
+
+</div>
+
+<script>
+let currentQuestionIndex = 0;
+let totalQuestions = 10;
+let answers = {};
+
+// Load the first question when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadCurrentQuestion();
+    
+    // Add event listener to next button
+    document.getElementById('next-btn').addEventListener('click', function() {
+        const answer = document.getElementById('user-response').value.trim();
+        if (answer === '') {
+            alert('Please answer the question before proceeding.');
+            return;
+        }
+        answers[currentQuestionIndex] = answer;
+        goToNextQuestion();
+    });
+    
+    // Add event listener to back button
+    document.getElementById('back-btn').addEventListener('click', function() {
+        goToPreviousQuestion();
+    });
+});
+
+function loadCurrentQuestion() {
+    fetch('/api/current-question')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error loading question');
+                return;
+            }
+            currentQuestionIndex = data.current - 1;
+            totalQuestions = data.total;
+            document.getElementById('question-text').textContent = data.question.text;
+            document.getElementById('progress-text').textContent = `Questions ${data.current} of ${data.total}`;
+            
+            // Update progress bar
+            const progressPercent = (data.current / data.total) * 100;
+            document.getElementById('progress-bar-fill').style.width = progressPercent + '%';
+            
+            // Load saved answer if it exists
+            document.getElementById('user-response').value = answers[currentQuestionIndex] || '';
+            
+            // Update button states
+            document.getElementById('back-btn').disabled = currentQuestionIndex === 0;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading question');
+        });
+}
+
+function goToNextQuestion() {
+    const answer = document.getElementById('user-response').value.trim();
+    
+    fetch('/api/next-question', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answer: answer })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            alert('Error moving to next question');
+            return;
+        }
+        
+        if (data.finished) {
+            // All questions answered - submit and redirect
+            submitAssessment();
+        } else {
+            // Load next question
+            loadCurrentQuestion();
+            window.scrollTo(0, 0);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error moving to next question');
+    });
+}
+
+function submitAssessment() {
+    // Show loading or redirect to analyzing page immediately
+    window.location.href = '/analyzing';
+    
+    // In the background or on the analyzing page, the submission happens
+    fetch('/api/submit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Assessment submitted:', data);
+    })
+    .catch(error => {
+        console.error('Error submitting assessment:', error);
+    });
+}
+
+function goToPreviousQuestion() {
+    const answer = document.getElementById('user-response').value.trim();
+    if (answer) {
+        answers[currentQuestionIndex] = answer;
+    }
+    
+    fetch('/api/previous-question', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        if (data.success) {
+            loadCurrentQuestion();
+            window.scrollTo(0, 0);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error moving to previous question');
+    });
+}
+</script>
+
+</section>
+
+</body>
+</html>

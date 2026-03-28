@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - JobReady</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="nav-left">
+    <img src="{{ url_for('static', filename='assets/logo.jpg') }}" class="logo">
+    <h1 class="brand">Job<span>Ready</span></h1>
+  </div>
+
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/register">Register</a>
+  </div>
+</header>
+
+<div class="auth-container">
+
+  <div class="auth-card">
+
+    <h2>Welcome Back 👋</h2>
+    <p class="auth-subtext">Login to continue your career journey</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" style="color: {% if category == 'danger' %}red{% elif category == 'success' %}green{% else %}blue{% endif %}; margin-bottom: 10px;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="/login" method="POST" class="auth-form">
+
+      <input type="email" name="email" placeholder="Email Address" required>
+
+      <input type="password" name="password" placeholder="Password" required>
+
+      <button class="primary-btn" type="submit">Login</button>
+
+    </form>
+
+    <p class="auth-switch">
+      Don't have an account?
+      <a href="/register">Create one</a>
+    </p>
+
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 JobReady | AI Career Assessment Platform</p>
+</footer>
+
+</body>
+</html>

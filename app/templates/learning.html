@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobReady</title>
+
+<!-- CSS -->
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header class="navbar">
+
+<div class="nav-left">
+<img src="{{ url_for('static', filename='assets/logo.jpg') }}" alt="JobReady Logo" class="logo">
+<h1 class="brand">Job<span>Ready</span></h1>
+</div>
+
+<nav class="nav-links">
+<a href="/">Home</a>
+<a href="/career">Career</a>
+</nav>
+
+</header>
+<div class="container">
+
+<h2>Learning Recommendations</h2>
+
+<p>Here are suggested resources to help you improve your skills.</p>
+
+<div class="courses">
+
+<div class="course-card">
+
+<img src="{{ url_for('static', filename='assets/book.png') }}">
+
+<h3>Python for Data Analysis</h3>
+
+<p>Learn data manipulation and analysis using python</p>
+
+<button class="next">Start Learning</button>
+
+</div>
+
+
+<div class="course-card">
+
+<img src="{{ url_for('static', filename='assets/book.png') }}">
+
+<h3>SQL Fundamental</h3>
+
+<p>Understand how to query and manage databases</p>
+
+<button class="next">Start Learning</button>
+
+</div>
+
+
+<div class="course-card">
+
+<img src="{{ url_for('static', filename='assets/book.png') }}">
+
+<h3>Data Visualization with Power BI</h3>
+
+<p>Create dashboards and visual insights</p>
+
+<button class="next">Start Learning</button>
+
+</div>
+
+</div>
+
+<button class="back" type="button" onclick="location.href='/career'">← Back to Dashboard</button>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 JobReady | AI Career Assessment Platform</p>
+
+</footer>
+
+</body>
+</html>

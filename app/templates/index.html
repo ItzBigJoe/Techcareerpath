@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobReady</title>
+
+<!-- CSS -->
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header class="navbar">
+
+<div class="nav-left">
+<img src="{{ url_for('static', filename='assets/logo.jpg') }}" alt="JobReady Logo" class="logo">
+<h1 class="brand">Job<span>Ready</span></h1>
+</div>
+
+  <div class="nav-links">
+    <a href="{{ url_for('pages.home') }}">Home</a>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('pages.profile') }}">Profile</a>
+      <a href="{{ url_for('pages.assessment') }}">Assessment</a>
+      <a href="{{ url_for('auth.logout') }}">Logout</a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}">Login</a>
+      <a href="{{ url_for('auth.register') }}">Register</a>
+    {% endif %}
+  </div>
+
+</header>
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+<h2>Discover Your Ideal Tech Career</h2>
+<p>Know your skills, choose your career.</p>
+
+<button class="primary-btn" type="button" onclick="location.href='/profile'">
+Start Assessment
+</button>
+
+</section>
+
+<!-- HOW IT WORKS -->
+
+<section class="how-it-works">
+
+<h3>How JobReady Works</h3>
+
+<div class="workflow">
+
+<span>Student</span>
+
+<span class="arrow">→</span>
+
+<span>Take Assessment</span>
+
+<span class="arrow">→</span>
+
+<span>AI Analysis</span>
+
+<span class="arrow">→</span>
+
+<span>Career Recommendation</span>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 JobReady | AI Career Assessment Platform</p>
+
+</footer>
+
+</body>
+</html>

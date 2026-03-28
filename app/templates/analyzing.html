@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobReady - Analyzing</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="nav-left">
+<img src="{{ url_for('static', filename='assets/logo.jpg') }}" alt="JobReady Logo" class="logo">
+<h1 class="brand">Job<span>Ready</span></h1>
+</div>
+
+<nav class="nav-links">
+<a href="/">Home</a>
+<a href="/assessment">Assessment</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h2>Analysing your Result</h2>
+<p>Our AI is evaluating your skills and matching you with the most suitable tech career.</p>
+
+<div class="frame1">
+    <img src="{{ url_for('static', filename='assets/icons/analysis.png') }}">
+</div>
+
+
+<h3>Analyzing Skills...</h3>
+
+<div class="progress-bar">
+<div class="progress"></div>
+</div>
+
+<div class="status">
+
+<ul>
+<li>✔ Processing assessment responses</li>
+<li>✔ Calculating skill scores</li>
+<li>✔ Matching career path</li>
+<li>✔ Generating Recommendations</li>
+</ul>
+
+</div>
+
+<div class="buttons">
+<button class="back" type="button" onclick="window.history.back()">Back</button>
+<button class="next" type="button" onclick="location.href='/career'">Next</button>
+</div>
+
+</div>
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 JobReady | AI Career Assessment Platform</p>
+
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Profile - JobReady</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="nav-left">
+<img src="{{ url_for('static', filename='assets/logo.jpg') }}" alt="JobReady Logo" class="logo">
+<h1 class="brand">Job<span>Ready</span></h1>
+</div>
+
+<nav class="nav-links">
+<a href="/">Home</a>
+<a href="/assessment">Assessment</a>
+</nav>
+
+</header>
+
+<section class="profile-section">
+
+<h2>Create Your Profile</h2>
+
+<p>Tell us about yourself so we can personalize your career assessment.</p>
+
+<!-- STEP ICONS -->
+
+<div class="profile-steps">
+
+<img src="{{ url_for('static', filename='assets/icons/user.png') }}" alt="user">
+
+<span class="arrow">→</span>
+
+<img src="{{ url_for('static', filename='assets/icons/form.png') }}" alt="form">
+
+<span class="arrow">→</span>
+
+<img src="{{ url_for('static', filename='assets/icons/ai.png') }}" alt="ai">
+
+<span class="arrow">→</span>
+
+<img src="{{ url_for('static', filename='assets/icons/career.png') }}" alt="career">
+
+</div>
+
+<!-- PROFILE FORM -->
+
+<form class="profile-form" action="/assessment" method="get">
+
+<input type="text" placeholder="Full Name">
+
+<input type="email" placeholder="Email Address">
+
+<select>
+<option>University / School</option>
+<option>University</option>
+<option>Polytechnic</option>
+<option>College</option>
+</select>
+
+<select>
+<option>Level of Study</option>
+<option>100 Level</option>
+<option>200 Level</option>
+<option>300 Level</option>
+<option>400 Level</option>
+</select>
+
+<select>
+<option>Area of Interest</option>
+<option>Technology</option>
+<option>Engineering</option>
+<option>Business</option>
+<option>Science</option>
+</select>
+
+<button class="primary-btn" type="submit">Continue to Assessment</button>
+
+</form>
+
+</section>
+
+</body>
+</html>
