@@ -14,5 +14,5 @@ class Config:
     if database_url and database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
         
-    SQLALCHEMY_DATABASE_URI = database_url or "sqlite:///jobready.db"
+    SQLALCHEMY_DATABASE_URI = database_url or f"sqlite:///{os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'jobready.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
