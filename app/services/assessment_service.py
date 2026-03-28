@@ -18,6 +18,7 @@ def process_assessment(user_id, answers_dict):
     
     correct_total = 0
     missed_categories = []
+    total_questions = len(QUESTIONS)
 
     for i, q in enumerate(QUESTIONS):
         user_answer = answers_dict.get(str(i)) or answers_dict.get(i)
@@ -31,7 +32,7 @@ def process_assessment(user_id, answers_dict):
             missed_categories.append(category)
 
     # Calculate percentages
-    readiness_score = int((correct_total / total_questions) * 100)
+    readiness_score = int((correct_total / total_questions) * 100) if total_questions > 0 else 0
     
     # Detailed category percentages
     calculated_skills = {}

@@ -32,10 +32,13 @@ def next_question():
     current_index = session.get('current_question_index', 0)
     
     # Store or update the answer
-    answers = session['answers']
+    answers = list(session['answers']) # Ensure it's a list
     if current_index < len(answers):
         answers[current_index] = answer
     else:
+        # Pad with None if somehow the index jumped
+        while len(answers) < current_index:
+            answers.append(None)
         answers.append(answer)
     session['answers'] = answers
     
@@ -43,6 +46,14 @@ def next_question():
     session['current_question_index'] = current_index + 1
     
     finished = session['current_question_index'] >= len(QUESTIONS)
+    
+    # Proactively process assessment if finished to avoid race conditions
+    if finished:
+        answers_dict = {str(i): ans for i, ans in enumerate(answers)}
+        process_assessment(current_user.id, answers_dict)
+        # Clear session after submission
+        session.pop('current_question_index', None)
+        session.pop('answers', None)
     
     return jsonify({
         "success": True,
@@ -63,9 +74,20 @@ def previous_question():
 @assessment_bp.route('/api/submit', methods=['POST'])
 @login_required
 def submit():
+    # This is now a backup or manual trigger, primary submission happens in next_question
     answers = session.get('answers', [])
     
     if not answers:
+        # Check if we already have a result from the pro-active submission
+        from app.models.result import Result
+        result = Result.query.filter_by(user_id=current_user.id).order_by(Result.id.desc()).first()
+        if result:
+            return jsonify({
+                "career": result.career,
+                "score": result.score,
+                "skills": result.skills,
+                "gaps": result.gaps
+            })
         return jsonify({"error": "No answers provided"}), 400
 
     # Convert session list to dict for processing

@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
       let softHTML = "";
 
       for (let skill in data.skills) {
+        if (skill === "Readiness") continue; // Skip overall readiness in detailed view
+        
         let value = data.skills[skill];
 
         let block = `
@@ -25,8 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         `;
 
-        // Classification logic based on new category structure
-        if (skill === "Technical Skills" || skill === "Technical") {
+        // Detailed classification logic
+        const techCategories = ["Frontend", "Backend", "AI/Data Science", "DSA", "Technical"];
+        if (techCategories.includes(skill)) {
           techHTML += block;
         } else if (skill === "Soft Skills") {
           softHTML += block;
