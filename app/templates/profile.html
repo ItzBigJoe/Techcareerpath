@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Create Profile - JobReady</title>
 
+<link rel="shortcut icon" href="{{ url_for('static', filename='assets/logo.jpg') }}" type="image/x-icon">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
@@ -61,26 +62,26 @@
 <input type="email" placeholder="Email Address">
 
 <select>
-<option>University / School</option>
-<option>University</option>
-<option>Polytechnic</option>
-<option>College</option>
+<option value="" disabled selected>University / School</option>
+<option value="university">University</option>
+<option value="polytechnic">Polytechnic</option>
+<option value="college">College</option>
 </select>
 
 <select>
-<option>Level of Study</option>
-<option>100 Level</option>
-<option>200 Level</option>
-<option>300 Level</option>
-<option>400 Level</option>
+<option value="" disabled selected>Level of Study</option>
+<option value="100">100 Level</option>
+<option value="200">200 Level</option>
+<option value="300">300 Level</option>
+<option value="400">400 Level</option>
 </select>
 
 <select>
-<option>Area of Interest</option>
-<option>Technology</option>
-<option>Engineering</option>
-<option>Business</option>
-<option>Science</option>
+<option value="" disabled selected>Area of Interest</option>
+<option value="technology">Technology</option>
+<option value="engineering">Engineering</option>
+<option value="business">Business</option>
+<option value="science">Science</option>
 </select>
 
 <button class="primary-btn" type="submit">Continue to Assessment</button>
