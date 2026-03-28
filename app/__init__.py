@@ -24,10 +24,6 @@ def create_app():
     # Ensure database tables are created (especially for PostgreSQL on Render)
     # Important: Move this AFTER blueprints are registered so models are imported
     with app.app_context():
-        # Import models here to ensure they are known to SQLAlchemy
-        from app.models.user import User
-        from app.models.assessment import Assessment
-        from app.models.result import Result
         db.create_all()
 
     return app
