@@ -28,3 +28,6 @@ def create_app():
     app.register_blueprint(pages_bp)
 
     return app
+
+# Define 'app' instance at the module level to support 'gunicorn app:app'
+app = create_app()

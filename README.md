@@ -66,7 +66,7 @@ JobReady is a powerful web application designed to help tech enthusiasts discove
 4. **Environment Settings**:
    - **Runtime**: `Python 3`
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn run:app`
+   - **Start Command**: `gunicorn wsgi:app` (or `gunicorn app:app`)
 5. **Add Environment Variables** in Render Dashboard:
    - `SECRET_KEY`: A random secure string.
    - `GEMINI_API_KEY`: Your Google Gemini API Key.
