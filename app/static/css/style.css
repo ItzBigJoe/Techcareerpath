@@ -20,14 +20,14 @@
   --font-xxl: calc(96px * var(--scale));
 
   /* Navbar */
-  --nav-height: calc(130px * var(--scale));
+  --nav-height: auto;
   --nav-padding-vertical: calc(14px * var(--scale));
   --nav-padding-horizontal: calc(20px * var(--scale));
-  --logo-height: calc(97px * var(--scale));
-  --logo-width: calc(129px * var(--scale));
-  --brand-indent: calc(100px * var(--scale));
-  --nav-link-gap: calc(30px * var(--scale));
-  --nav-link-padding: calc(35px * var(--scale));
+  --logo-height: calc(60px * var(--scale));
+  --logo-width: auto;
+  --brand-indent: 0;
+  --nav-link-gap: calc(15px * var(--scale));
+  --nav-link-padding: calc(10px * var(--scale));
 }
 
 * {
@@ -42,85 +42,71 @@ body {
   color: #333;
   line-height: 1.6;
   font-size: var(--font-base);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* =============================== NAVBAR ================================= */
 .navbar {
   display: flex;
-  justify-content: safe;
+  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   padding: var(--nav-padding-vertical) var(--nav-padding-horizontal);
   background: #2d4b8f;
-  border-top-left-radius: var(--radius);
-  border-top-right-radius: var(--radius);
   width: 100%;
-  height: var(--nav-height);
+  min-height: 80px;
 }
 .nav-left {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  flex-shrink: 0;
 }
 .logo {
   height: var(--logo-height);
-  width: var(--logo-width);
+  width: auto;
+  max-width: 120px;
 }
 .brand {
-  font-size: var(--font-xxl);
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #000;
-  padding-left: var(--brand-indent);
+  color: #fff;
+  padding-left: 10px;
+  white-space: nowrap;
 }
 .brand span {
   color: #3db4ff;
 }
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .nav-links a {
   color: white;
   text-decoration: none;
-  margin-left: var(--nav-link-gap);
-  font-size: calc(36px * var(--scale));
-  font-weight: 300;
-  padding: var(--nav-link-padding);
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 8px 12px;
+  border-radius: 4px;
 }
 .nav-links a:hover {
-  opacity: 0.8;
+  background: rgba(255,255,255,0.1);
 }
 
-/* =============================== HEADER ================================= */
-header {
-  background: #243e74;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: calc(15px * var(--scale)) calc(40px * var(--scale));
-}
-header .logo {
-  display: flex;
-  align-items: center;
-  gap: calc(10px * var(--scale));
-}
-header .logo img {
-  width: calc(40px * var(--scale));
-}
-header .logo span {
-  font-size: calc(26px * var(--scale));
-  font-weight: bold;
-}
-header .logo span b {
-  color: #4db1ff;
-}
-nav a {
-  color: white;
-  text-decoration: none;
-  margin-left: calc(25px * var(--scale));
-}
-
-.container{
-  width: 700px;
+.container, .assessment-section, .profile-section {
+  width: 95%;
+  max-width: 800px;
   margin: auto;
   margin-top: calc(40px * var(--scale));
   text-align: center;
+  padding: 0 15px;
 }
 .progress-bar{
   width: 100%;
@@ -231,54 +217,217 @@ button.back:hover {
   object-fit: cover;
   /* prevents image distortion */
   /* optional if you want the image circular */
-} .status{ background:white; padding:20px; border-radius:8px; } .status li{ list-style:none; margin:10px 0; text-align:left; } .buttons{ display:flex; justify-content:space-between; margin-top:30px; } button{ padding:12px 25px; border:none; border-radius:8px; cursor:pointer; } .back{ background:#ddd; } .next{ background:#2c4fa3; color:white; } /* =============================== HERO SECTION ================================= */ .hero{ text-align:center; padding:80px 20px; } .hero h2{ font-size:34px; font-weight:700; margin-bottom:10px; } .hero p{ color:#666; margin-bottom:30px; } /* =============================== BUTTONS ================================= */ .primary-btn{ background:#6e7ea8; border:none; color:white; padding:14px 30px; border-radius:12px; font-size:16px; cursor:pointer; } .primary-btn:hover .secondary-btn{ background:#e6e6e6; border:none; padding:12px 28px; border-radius:10px; cursor:pointer; } /* =============================== HOW IT WORKS ================================= */ .how-it-works{ background:#dfe6f1; padding:40px; margin:20px; border-radius:10px; text-align:center; } .how-it-works h3{ margin-bottom:20px; } .workflow{ display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; font-size:18px; } .arrow{ color:#777; } /* =============================== FOOTER ================================= */ footer{ text-align:center; padding:20px; color:#888; font-size:14px; } /* =============================== PROFILE PAGE ================================= */ .profile-section{ text-align:center; padding:40px 20px; } .profile-section h2{ font-size:28px; margin-bottom:8px; } .profile-section p{ color:#666; margin-bottom:30px; } /* STEP ICONS */ .profile-steps{ display:flex; justify-content:center; align-items:center; gap:25px; margin-bottom:40px; } .profile-steps img{ width:60px; height:60px; background:#e4eaf3; padding:12px; border-radius:50%; } /* PROFILE FORM */ .profile-form{ width:420px; margin:auto; display:flex; flex-direction:column; gap:16px; } .profile-form input, .profile-form select{ padding:14px 18px; border-radius:20px; border:1px solid #ccc; font-size:15px; } .profile-form input:focus, .profile-form select:focus{ outline:none; border-color:#6e7ea8; } .profile-form button{ margin-top:20px; } /* =============================== ASSESSMENT PAGE ================================= */ .assessment-section{ padding:40px 20px; max-width:1100px; margin:auto; } .assessment-section h2{ text-align:center; margin-bottom:10px; } .assessment-section p{ text-align:center; color:#666; margin-bottom:30px; } /* CAREER GRID */ .career-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-bottom:30px; } .career-card{ background:white; border-radius:10px; padding:20px; text-align:center; cursor:pointer; border:1px solid #ddd; transition:0.2s; } .career-card:hover{ transform:translateY(-4px); box-shadow:0 4px 10px rgba(0,0,0,0.1); } .career-card img{ width:40px; margin-bottom:10px; } /* PROGRESS */ .progress-area{ margin:20px 0; } .progress-bar{ width:100%; height:8px; background:#ddd; border-radius:6px; overflow:hidden; } .progress{ width:20%; height:100%; background:#2d4b8f; } /* QUESTION AREA */ .question-area{ margin-top:20px; } .question-area h3{ margin-bottom:10px; } .question-area label{ display:block; margin:8px 0; font-size:16px; } .question-area input{ margin-right:8px; } /* TIP BOX */ .tip-box{ background:#eef3fa; padding:16px; border-radius:10px; margin-top:20px; width:260px; } .tip-box h4{ color:#2d4b8f; margin-bottom:6px; } /* QUESTION NAVIGATION */
-.question-nav {
+} .status{ background:white; padding:20px; border-radius:8px; } .status li{ list-style:none; margin:10px 0; text-align:left; } .buttons{ display:flex; justify-content:space-between; margin-top:30px; } button{ padding:12px 25px; border:none; border-radius:8px; cursor:pointer; } .back{ background:#ddd; } .next{ background:#2c4fa3; color:white; } /* =============================== HERO SECTION ================================= */ .hero{ text-align:center; padding:80px 20px; } .hero h2{ font-size:34px; font-weight:700; margin-bottom:10px; } .hero p{ color:#666; margin-bottom:30px; } /* =============================== BUTTONS ================================= */ .primary-btn{ background:#6e7ea8; border:none; color:white; padding:14px 30px; border-radius:12px; font-size:16px; cursor:pointer; } .primary-btn:hover .secondary-btn{ background:#e6e6e6; border:none; padding:12px 28px; border-radius:10px; cursor:pointer; } /* =============================== HOW IT WORKS ================================= */ .how-it-works{ background:#dfe6f1; padding:40px; margin:20px; border-radius:10px; text-align:center; } .how-it-works h3{ margin-bottom:20px; } .workflow{ display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; font-size:18px; } .arrow{ color:#777; } /* =============================== FOOTER ================================= */ footer{ text-align:center; padding:20px; color:#888; font-size:14px; } /* =============================== PROFILE PAGE ================================= */
+.profile-section h2{
+  font-size:28px;
+  margin-bottom:8px;
+} .profile-section p{ color:#666; margin-bottom:30px; } /* STEP ICONS */ .profile-steps{ display:flex; justify-content:center; align-items:center; gap:25px; margin-bottom:40px; } .profile-steps img{ width:60px; height:60px; background:#e4eaf3; padding:12px; border-radius:50%; } /* PROFILE FORM */
+.profile-form {
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
   display: flex;
-  justify-content: space-between;
-  margin-top: calc(30px * var(--scale));
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: 0 10px;
+}
+
+.profile-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* HERO SECTION */
+.hero {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+/* WORKFLOW */
+.workflow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* GRIDS */
+.career-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.course-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 /* =============================== RESPONSIVE DESIGN ================================= */
 
-/* Scale down the whole UI at smaller breakpoints */
-@media (max-width: 1000px) {
-  :root {
-    --scale: 0.95;
-  }
-}
-
-@media (max-width: 700px) {
-  :root {
-    --scale: 0.85;
-  }
-}
-
-@media (max-width: 1000px) {
-  .career-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 700px) {
-  .hero h2 {
-    font-size: calc(26px * var(--scale));
-  }
-
-  .profile-form {
-    width: 90%;
-  }
-
-  .career-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .question-nav {
+@media (max-width: 768px) {
+  .navbar {
     flex-direction: column;
-    gap: calc(10px * var(--scale));
+    height: auto;
+    padding: 15px;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .nav-left {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .brand {
+    font-size: 1.8rem;
   }
 
-  .tip-box {
+  .logo {
+    max-width: 100px;
+    height: auto;
+  }
+  
+  .nav-links {
+    justify-content: center;
     width: 100%;
+    gap: 8px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+  
+  .hero {
+    padding: 40px 15px;
+  }
+
+  .hero h2 {
+    font-size: 1.8rem;
+  }
+  
+  .skills {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .auth-card {
+    width: 95%;
+    max-width: 380px;
+    padding: 20px;
+  }
+
+  .how-it-works {
+    padding: 30px 15px;
+    margin: 15px;
+  }
+
+  .workflow {
+    font-size: 1rem;
+    gap: 8px;
+  }
+
+  .workflow span {
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 4px;
+  }
+
+  .workflow .arrow {
+    background: none;
+    padding: 0;
+  }
+
+  .container {
+    width: 95%;
+    margin-top: 20px;
+    padding: 0 10px;
+  }
+
+  .result-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .frame1 {
+    width: 120px;
+    height: 120px;
+  }
+
+  .frame1 img {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-steps {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .profile-steps img {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+  }
+  
+  .profile-steps .arrow {
+    font-size: 0.8rem;
+  }
+
+  .primary-btn, .secondary-btn, .next, .back {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .buttons, .question-nav {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+  }
+
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+
+  .how-it-works {
+    padding: 20px 10px;
+    margin: 10px;
+  }
+
+  .workflow {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .workflow .arrow {
+    transform: rotate(90deg);
+    margin: 5px 0;
+  }
+
+  .container, .assessment-section, .profile-section {
+    margin-top: 15px;
+    padding: 0 10px;
   }
 }
 
@@ -359,7 +508,8 @@ AUTH PAGES (LOGIN / REGISTER)
   padding: calc(30px * var(--scale));
   border-radius: calc(10px * var(--scale));
   box-shadow: 0 calc(4px * var(--scale)) calc(15px * var(--scale)) rgba(0,0,0,0.08);
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
 }
 
