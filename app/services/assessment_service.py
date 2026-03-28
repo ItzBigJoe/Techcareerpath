@@ -2,7 +2,7 @@ from app.models.assessment import Assessment
 from app.models.result import Result
 from app.core.extensions import db
 from app.services.ai_service import generate_result
-from app.routes.assessment import QUESTIONS
+from app.core.questions import QUESTIONS
 
 def process_assessment(user_id, answers_dict):
     # answers_dict is { "0": "User Answer", "1": "User Answer", ... }
