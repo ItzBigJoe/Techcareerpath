@@ -1,30 +1,30 @@
-from google import genai
+from openai import OpenAI
 import os
 import json
 
 # Define the model ID
-MODEL_ID = "gemini-1.5-flash"
+MODEL_ID = "gpt-4o-mini"  # Using a fast and cost-effective model
 
 def get_ai_client():
-    """Lazily initialize the AI client to avoid errors when API key is missing during import."""
-    api_key = os.getenv("GEMINI_API_KEY")
+    """Lazily initialize the OpenAI client to avoid errors when API key is missing during import."""
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return None
     try:
-        return genai.Client(api_key=api_key)
+        return OpenAI(api_key=api_key)
     except Exception:
         return None
 
 def generate_result(answers):
     prompt = f"""
-    Analyze these answers: {answers}
+    Analyze these career assessment answers: {answers}
 
-    Return JSON:
+    Return ONLY a valid JSON object with this exact structure:
     {{
-      "career": "...",
-      "score": 0-100,
-      "skills": {{"Python":80,"SQL":60}},
-      "gaps": ["Improve SQL"]
+      "career": "Recommended Career Name",
+      "score": integer (0-100),
+      "skills": {{"SkillName": score_integer, ...}},
+      "gaps": ["Gap 1", "Gap 2", ...]
     }}
     """
 
@@ -36,21 +36,27 @@ def generate_result(answers):
             "career": "Technical Path",
             "score": 50,
             "skills": {"General": 50},
-            "gaps": ["Missing API Key - Assessment using default result"]
+            "gaps": ["Error: OpenAI API Key not found. Please set OPENAI_API_KEY in your environment variables."]
         }
 
     try:
-        res = client.models.generate_content(
+        response = client.chat.completions.create(
             model=MODEL_ID,
-            contents=prompt
+            messages=[
+                {"role": "system", "content": "You are a career counseling AI that analyzes skill assessments and returns JSON data."},
+                {"role": "user", "content": prompt}
+            ],
+            response_format={ "type": "json_object" }
         )
         
-        if not res or not res.text:
-            raise ValueError("Empty response from AI")
+        if not response.choices or len(response.choices) == 0:
+            raise ValueError('No choices in response from OpenAI')
             
-        # The new SDK might return a cleaner response or we might still need to strip markdown
-        raw = res.text.replace("```json","").replace("```","").strip()
-        return json.loads(raw)
+        content = response.choices[0].message.content
+        if not content:
+            raise ValueError("Empty response from OpenAI")
+            
+        return json.loads(content)
     except Exception as e:
         print(f"AI Error: {e}")
         return {
