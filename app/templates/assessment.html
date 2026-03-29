@@ -88,8 +88,23 @@ let currentQuestionIndex = 0;
 let totalQuestions = 25;
 let answers = {};
 
-// Load the first question when the page loads
+// Load first question when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if profile is completed
+    const savedProfile = sessionStorage.getItem('userProfile');
+    if (!savedProfile) {
+        // No profile found, redirect to profile page
+        window.location.href = '/profile';
+        return;
+    }
+    
+    const profile = JSON.parse(savedProfile);
+    if (!profile || !profile.profileCompleted) {
+        // Profile not completed, redirect to profile page
+        window.location.href = '/profile';
+        return;
+    }
+    
     loadCurrentQuestion();
     
     // Add event listener to next button
